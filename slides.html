@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI in Business — Unit 4 CTE Visit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gies-orange: #E84A27;
+    --gies-blue: #13294B;
+    --gies-light: #F5F5F5;
+    --accent-blue: #3B7EA1;
+    --tier-orange: #E8642B;
+    --tier-blue: #3872A8;
+    --tier-navy: #1B2A4A;
+    --text-dark: #1a1a2e;
+    --text-muted: #555;
+  }
+
+  html, body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #fff;
+    color: var(--text-dark);
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .slide.active { display: flex; }
+
+  /* Title slide */
+  .slide-title {
+    background: var(--gies-blue);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  .slide-title h1 {
+    font-size: 4.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .slide-title .subtitle {
+    font-size: 1.8rem;
+    font-weight: 300;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+  .slide-title .presenter {
+    margin-top: 40px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  /* Section divider slides */
+  .slide-section {
+    background: var(--gies-orange);
+    color: white;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 100px;
+  }
+  .slide-section .section-number {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    margin-bottom: 16px;
+  }
+  .slide-section h2 {
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  /* Content slides */
+  .slide-content {
+    background: white;
+    padding: 50px 80px;
+  }
+  .slide-content h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--gies-blue);
+    margin-bottom: 36px;
+    line-height: 1.2;
+  }
+  .slide-content h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--gies-orange);
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+  .slide-content h3:first-of-type { margin-top: 0; }
+  .slide-content p, .slide-content li {
+    font-size: 1.6rem;
+    line-height: 1.7;
+    color: var(--text-dark);
+  }
+  .slide-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  .slide-content ul li {
+    padding: 8px 0 8px 36px;
+    position: relative;
+  }
+  .slide-content ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+    background: var(--gies-orange);
+    border-radius: 50%;
+  }
+
+  /* Quote slide */
+  .slide-quote {
+    background: var(--gies-blue);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 120px;
+  }
+  .slide-quote blockquote {
+    font-size: 2.6rem;
+    font-weight: 300;
+    line-height: 1.5;
+    font-style: italic;
+    max-width: 900px;
+  }
+  .slide-quote blockquote strong {
+    font-weight: 700;
+    color: var(--gies-orange);
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    flex: 1;
+  }
+  .two-col .col h3 {
+    margin-top: 0;
+  }
+
+  /* Old vs New comparison */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 30px;
+    align-items: start;
+    flex: 1;
+  }
+  .compare-side {
+    padding: 30px;
+    border-radius: 16px;
+  }
+  .compare-side.old {
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+  }
+  .compare-side.new {
+    background: #E84A270D;
+    border: 2px solid var(--gies-orange);
+  }
+  .compare-arrow {
+    font-size: 2.5rem;
+    align-self: center;
+    color: var(--gies-orange);
+    font-weight: 700;
+  }
+  .compare-side h3 { margin-top: 0 !important; }
+  .compare-side p {
+    font-size: 1.4rem !important;
+    line-height: 1.6;
+  }
+
+  /* Numbered items */
+  .numbered-list {
+    counter-reset: items;
+    list-style: none !important;
+    padding: 0;
+  }
+  .numbered-list li {
+    padding: 16px 0 16px 60px !important;
+    position: relative;
+    counter-increment: items;
+    border-bottom: 1px solid #eee;
+  }
+  .numbered-list li:last-child { border-bottom: none; }
+  .numbered-list li::before {
+    content: counter(items) !important;
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 40px;
+    height: 40px;
+    background: var(--gies-orange) !important;
+    border-radius: 50% !important;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .numbered-list li strong { color: var(--gies-blue); }
+
+  /* Framework tiers */
+  .framework {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    flex: 1;
+    align-items: stretch;
+  }
+  .tier {
+    border-radius: 16px;
+    padding: 32px 28px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+  }
+  .tier-literacy { background: var(--tier-orange); }
+  .tier-competency { background: var(--tier-blue); }
+  .tier-expertise { background: var(--tier-navy); }
+  .tier h3 {
+    color: white !important;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    margin-top: 0 !important;
+  }
+  .tier ul {
+    list-style: none;
+    padding: 0;
+  }
+  .tier ul li {
+    font-size: 1.25rem !important;
+    padding: 6px 0 6px 20px !important;
+    position: relative;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+  }
+  .tier ul li::before {
+    content: '' !important;
+    width: 8px !important;
+    height: 8px !important;
+    background: rgba(255,255,255,0.6) !important;
+    top: 14px !important;
+    left: 0 !important;
+  }
+
+  /* CTE callout */
+  .cte-callout {
+    background: var(--gies-orange);
+    color: white;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-top: 28px;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .cte-callout strong { font-weight: 700; }
+
+  /* Roles grid */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 10px;
+  }
+  .role-card {
+    background: var(--gies-light);
+    border-radius: 12px;
+    padding: 28px;
+    border-left: 4px solid var(--gies-orange);
+  }
+  .role-card h4 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--gies-blue);
+    margin-bottom: 8px;
+  }
+  .role-card p {
+    font-size: 1.2rem !important;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Slide counter */
+  .slide-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    font-size: 0.85rem;
+    color: #999;
+    font-weight: 400;
+    z-index: 100;
+  }
+  .slide-title ~ .slide-counter,
+  .slide-section ~ .slide-counter,
+  .slide-quote ~ .slide-counter { color: rgba(255,255,255,0.4); }
+
+  /* Final slide */
+  .slide-final {
+    background: var(--gies-blue);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  .slide-final h2 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: white;
+  }
+  .slide-final p {
+    font-size: 1.8rem;
+    font-weight: 300;
+    opacity: 0.85;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* Bridge slide */
+  .bridge-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 10px;
+  }
+  .bridge-card {
+    background: var(--gies-light);
+    border-radius: 12px;
+    padding: 24px;
+    border-top: 4px solid var(--accent-blue);
+  }
+  .bridge-card .time {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gies-orange);
+    margin-bottom: 4px;
+  }
+  .bridge-card h4 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--gies-blue);
+    margin-bottom: 6px;
+  }
+  .bridge-card p {
+    font-size: 1.2rem !important;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Illinois I + GIES logo */
+  .logo {
+    position: absolute;
+    top: 28px;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .logo svg { width: 43px; height: 50px; }
+  .logo .gies-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  /* On navy/blue backgrounds: orange I with white outline, white GIES */
+  .slide-title .logo-outline, .slide-quote .logo-outline, .slide-final .logo-outline { fill: white; }
+  .slide-title .logo-fill, .slide-quote .logo-fill, .slide-final .logo-fill { fill: var(--gies-orange); }
+  .slide-title .gies-text, .slide-quote .gies-text, .slide-final .gies-text { color: rgba(255,255,255,0.8); }
+  /* On orange backgrounds: blue I with white outline, white GIES */
+  .slide-section .logo-outline { fill: white; }
+  .slide-section .logo-fill { fill: var(--gies-blue); }
+  .slide-section .gies-text { color: rgba(255,255,255,0.9); }
+  /* On white backgrounds: orange I with blue outline, dark GIES */
+  .slide-content .logo-outline { fill: var(--gies-blue); }
+  .slide-content .logo-fill { fill: var(--gies-orange); }
+  .slide-content .gies-text { color: var(--text-dark); }
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide slide-title active" data-slide="1">
+  <h1>AI in Business</h1>
+  <div class="subtitle">What It Means for the Careers<br>Your Students Are Preparing For</div>
+  <div class="presenter">Vishal Sachdev &middot; Gies College of Business &middot; March 12, 2026</div>
+</div>
+
+<!-- Slide 2: Opening quote -->
+<div class="slide slide-quote" data-slide="2">
+  <blockquote>
+    "Every business career your students are preparing for <strong>already involves AI</strong> — most people just don't notice it yet. Within 5 years, it won't be in the background. It'll be the <strong>primary way work gets done</strong>."
+  </blockquote>
+</div>
+
+<!-- Slide 3: The frame -->
+<div class="slide slide-content" data-slide="3">
+  <h2>AI literacy is the new spreadsheet literacy</h2>
+  <div class="two-col">
+    <div class="col">
+      <h3>20 years ago</h3>
+      <p>"Every business professional needs to know Excel."</p>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 1.15rem;">Spreadsheets didn't replace accountants — they made accountants faster, more capable, and more valuable.</p>
+    </div>
+    <div class="col">
+      <h3>Today</h3>
+      <p>"Every business professional needs to know how to direct AI."</p>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 1.15rem;">AI won't replace your students — but someone who knows how to use AI might.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Section - Three Shifts -->
+<div class="slide slide-section" data-slide="4">
+  <div class="section-number">Part 1</div>
+  <h2>Three Shifts<br>Happening Right Now</h2>
+</div>
+
+<!-- Slide 5: Shift 1 -->
+<div class="slide slide-content" data-slide="5">
+  <h2>Shift 1: Data Entry → Data Direction</h2>
+  <div class="compare">
+    <div class="compare-side old">
+      <h3 style="color: #666;">Before</h3>
+      <p>Bookkeepers enter transactions.<br>Marketing assistants compile reports.<br>Admins schedule and organize.</p>
+    </div>
+    <div class="compare-arrow">→</div>
+    <div class="compare-side new">
+      <h3>Now</h3>
+      <p>AI handles the rote work.<br>The human decides <strong>what questions to ask</strong>, what data matters, and <strong>what to do with the answer</strong>.</p>
+    </div>
+  </div>
+  <div style="background: var(--gies-light); border-radius: 12px; padding: 20px 28px; margin-top: 20px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center;">
+    <div>
+      <div style="font-size: 0.95rem; font-weight: 700; color: var(--gies-orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Monday morning, before AI</div>
+      <p style="font-size: 1.2rem !important; line-height: 1.5; color: var(--text-muted);">Marketing intern spends <strong style="color: var(--text-dark);">3 hours</strong> researching 5 competitors — copying websites, pulling pricing, building a spreadsheet, writing a summary.</p>
+    </div>
+    <div style="font-size: 2rem; color: var(--gies-orange); font-weight: 700;">→</div>
+    <div>
+      <div style="font-size: 0.95rem; font-weight: 700; color: var(--gies-orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Monday morning, with AI</div>
+      <p style="font-size: 1.2rem !important; line-height: 1.5; color: var(--text-muted);">AI drafts the analysis in <strong style="color: var(--text-dark);">5 minutes</strong>. Intern spends 3 hours on <strong style="color: var(--text-dark);">strategy, client calls, and catching what AI got wrong</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 6: Shift 2 -->
+<div class="slide slide-content" data-slide="6">
+  <h2>Shift 2: Specialists → T-Shaped Builders</h2>
+  <p style="margin-bottom: 24px;">The most in-demand roles now combine <strong>domain knowledge + AI fluency</strong>:</p>
+  <div class="roles-grid">
+    <div class="role-card">
+      <h4>AI-Augmented Marketing Analyst</h4>
+      <p>Uses AI for customer segmentation — writes the strategy</p>
+    </div>
+    <div class="role-card">
+      <h4>Business Process Automation Specialist</h4>
+      <p>Maps workflows — directs AI to automate them</p>
+    </div>
+    <div class="role-card">
+      <h4>AI Product Manager</h4>
+      <p>Doesn't code — shapes what AI products do</p>
+    </div>
+  </div>
+  <div class="cte-callout">
+    Students don't need to code. They need to <strong>describe what they want built</strong> clearly. That's context engineering — and it's a business skill.
+  </div>
+</div>
+
+<!-- Slide 7: Shift 3 -->
+<div class="slide slide-content" data-slide="7">
+  <h2>Shift 3: Consuming Content → Building Tools</h2>
+  <div class="compare">
+    <div class="compare-side old">
+      <h3 style="color: #666;">Old Model</h3>
+      <p>Learn software:<br>Excel, QuickBooks, Canva</p>
+      <p style="margin-top: 12px; font-size: 1.3rem !important; color: #888;">Students use tools others built.</p>
+    </div>
+    <div class="compare-arrow">→</div>
+    <div class="compare-side new">
+      <h3>New Model</h3>
+      <p><strong>Build</strong> the tool you need using AI:</br>Customer intake form, inventory tracker, marketing dashboard</p>
+      <p style="margin-top: 12px; font-size: 1.3rem !important;">Students <strong>create</strong> tools.</p>
+    </div>
+  </div>
+  <div class="cte-callout" style="display: flex; align-items: center; gap: 24px;">
+    <div style="flex: 1;"><strong>Real example:</strong> One of my students got tired of guessing whether an AI tool worked — so he built an open-source benchmarking tool and shared it on LinkedIn. He's not a CS major. He described what he needed, and AI helped him build it.</div>
+    <div style="flex-shrink: 0; text-align: center; opacity: 0.9; font-size: 1.1rem; line-height: 1.4;">— Ashleyn Castelino<br><span style="font-size: 0.95rem; opacity: 0.8;">Student, Gies College of Business</span></div>
+  </div>
+</div>
+
+<!-- Slide 8: Section - What You Can Do -->
+<div class="slide slide-section" data-slide="8">
+  <div class="section-number">Part 2</div>
+  <h2>What CTE Teachers<br>Can Do Right Now</h2>
+</div>
+
+<!-- Slide 9: Three actions -->
+<div class="slide slide-content" data-slide="9">
+  <h2>Three Things to Try</h2>
+  <ul class="numbered-list">
+    <li><strong>Teach students to be reviewers, not just users</strong><br><span style="font-size: 1.3rem; color: var(--text-muted);">Have students peer review AI-generated work — a business plan, a marketing brief, a financial projection. They learn more by finding AI's mistakes than by doing it from scratch.</span></li>
+    <li><strong>Have students build something</strong><br><span style="font-size: 1.3rem; color: var(--text-muted);">A feedback form, a calculator, a marketing mockup — built with AI. Teaches requirements, iteration, and quality control.</span></li>
+    <li><strong>Create AI portfolios</strong><br><span style="font-size: 1.3rem; color: var(--text-muted);">Students collect their best AI-assisted work — prompts, outputs, and reflections on what they changed. Shows employers they can direct AI, not just use it.</span></li>
+  </ul>
+</div>
+
+<!-- Slide 10: Section - Framework -->
+<div class="slide slide-section" data-slide="10">
+  <div class="section-number">Part 3</div>
+  <h2>Where This Leads</h2>
+</div>
+
+<!-- Slide 11: Gies Framework -->
+<div class="slide slide-content" data-slide="11">
+  <h2>Skill Framework for Gies Business Learners</h2>
+  <div class="framework">
+    <div class="tier tier-literacy">
+      <h3>AI Literacy</h3>
+      <ul>
+        <li>Explain fundamental AI concepts and technologies</li>
+        <li>Recognize AI applications across business, society, and personal domains</li>
+        <li>Understand ethical considerations</li>
+        <li>Critically evaluate AI outputs and limitations</li>
+      </ul>
+    </div>
+    <div class="tier tier-competency">
+      <h3>AI Competency</h3>
+      <ul>
+        <li>Use AI tools for business workflows</li>
+        <li>Solve business problems using AI-powered resources</li>
+        <li>Interpret AI-generated insights for business context</li>
+        <li>Collaborate with technical specialists on AI projects</li>
+      </ul>
+    </div>
+    <div class="tier tier-expertise">
+      <h3>AI Expertise</h3>
+      <ul>
+        <li>Develop and deploy AI solutions</li>
+        <li>Lead AI implementation projects</li>
+        <li>Strategic thinking about AI's transformative potential</li>
+        <li>Innovate new AI applications or frameworks</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 12: CTE + Framework connection -->
+<div class="slide slide-quote" data-slide="12">
+  <blockquote>
+    "Your CTE students arrive at college with <strong>domain knowledge</strong> most freshmen don't have. That's the foundation of AI Literacy.<br><br>Add AI fluency to what you already teach, and your students show up ready for <strong>AI Competency</strong> — they're ahead of the game."
+  </blockquote>
+</div>
+
+<!-- Slide 13: Closing -->
+<div class="slide slide-final" data-slide="14">
+  <h2>We're building this framework so every<br>Gies graduate has AI Competency.</h2>
+  <p>You can give your students a head start.</p>
+</div>
+
+<!-- Slide counter -->
+<div class="slide-counter"><span id="current">1</span> / <span id="total"></span></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('total').textContent = total;
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = current + 1;
+
+    // Counter color based on slide background
+    const counter = document.querySelector('.slide-counter');
+    const s = slides[current];
+    if (s.classList.contains('slide-title') || s.classList.contains('slide-section') ||
+        s.classList.contains('slide-quote') || s.classList.contains('slide-final')) {
+      counter.style.color = 'rgba(255,255,255,0.4)';
+    } else {
+      counter.style.color = '#999';
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  // Touch / click navigation
+  document.addEventListener('click', (e) => {
+    if (e.clientX > window.innerWidth / 2) goTo(current + 1);
+    else goTo(current - 1);
+  });
+
+  // Inject Illinois Block I + GIES logo into every slide
+  // Block I: serif I with white outline, matching official brand
+  const logoHTML = `<div class="logo">
+    <svg viewBox="0 0 66 76" xmlns="http://www.w3.org/2000/svg">
+      <path class="logo-outline" d="M0,0 L66,0 L66,18 L44,18 L44,58 L66,58 L66,76 L0,76 L0,58 L22,58 L22,18 L0,18 Z"/>
+      <path class="logo-fill" d="M3,3 L63,3 L63,15 L41,15 L41,61 L63,61 L63,73 L3,73 L3,61 L25,61 L25,15 L3,15 Z"/>
+    </svg>
+    <span class="gies-text">Gies</span>
+  </div>`;
+  slides.forEach(s => s.insertAdjacentHTML('beforeend', logoHTML));
+</script>
+</body>
+</html>
